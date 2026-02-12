@@ -1,6 +1,6 @@
 completion:
   positional:
-    - $files
+    - [$files]
 flags:
   --help: Show help menu for memify
   --top=: Set top text
