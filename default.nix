@@ -1,13 +1,13 @@
 {
-  runtimeShell,
-  makeWrapper,
-  stdenv,
   lib,
-  gum,
-  ffmpeg,
-  imagemagick,
+  makeWrapper,
+  runtimeShell,
+  stdenv,
   coreutils,
+  ffmpeg,
   file,
+  gum,
+  imagemagick,
 }:
 stdenv.mkDerivation rec {
   name = "memify";
