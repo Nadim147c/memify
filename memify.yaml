@@ -1,0 +1,8 @@
+completion:
+  positional:
+    - $files
+flags:
+  --help: Show help menu for memify
+  --top=: Set top text
+  --bottom=: Set bottom text
+name: memify
