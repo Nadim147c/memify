@@ -127,6 +127,7 @@ gum log -l info --prefix Output "$OUTPUT"
 # Run ffmpeg
 gum spin --title="Cooking your the meme!" -- \
     ffmpeg "${INPUTS[@]}" \
-    -filter_complex "$FILTER_COMPLEX;[out]format=yuv420p[final]" -map "[final]" \
+    -filter_complex "$FILTER_COMPLEX;[out]format=yuv420p[final]" \
+    -map "[final]" -map 0:a? \
     -c:v libx264 -crf 23 -preset veryfast -y \
     "$OUTPUT"
