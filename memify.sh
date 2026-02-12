@@ -12,6 +12,11 @@ done
 
 # --- Start ---
 
+function help-cmd() {
+    echo 'USE: memify [--top=TEXT] [--bottom=TEXT] <path/to/image/or/video>'
+    exit 1
+}
+
 # Default values
 TOP_TEXT=""
 BOTTOM_TEXT=""
@@ -21,8 +26,7 @@ VIDEO_FILE=""
 while [[ $# -gt 0 ]]; do
     case $1 in
     --help)
-        echo 'USE: memify [--top=TEXT] [--bottom=TEXT] <path/to/image/or/video>'
-        exit 1
+        help-cmd
         ;;
     --top=*)
         TOP_TEXT="${1#*=}"
@@ -51,14 +55,19 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+if [[ -z "$VIDEO_FILE" ]]; then
+    gum log -l error "please provide a video/image file"
+    help-cmd
+fi
+
+if [[ -z "$TOP_TEXT" ]] && [[ -z "$BOTTOM_TEXT" ]]; then
+    gum log -l error "please provide top or bottom text"
+    help-cmd
+fi
+
 gum log -l debug "top=$TOP_TEXT"
 gum log -l debug "video=$VIDEO_FILE"
 gum log -l debug "bottom=$BOTTOM_TEXT"
-
-if [[ -z "$VIDEO_FILE" ]]; then
-    gum log -l error "please provide a video/image file"
-    exit 1
-fi
 
 function cleanup() {
     gum log -l info "Running cleanup!"
