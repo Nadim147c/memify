@@ -6,6 +6,7 @@
   coreutils,
   ffmpeg,
   file,
+  gnused,
   gum,
   imagemagick,
 }:
@@ -23,6 +24,7 @@ stdenv.mkDerivation rec {
     imagemagick
     coreutils
     file
+    gnused
   ];
 
   installPhase = ''

@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-DEPENDENCIES=(ffmpeg magick gum md5sum file)
+DEPENDENCIES=(ffmpeg magick gum file tr sed)
 for cmd in "${DEPENDENCIES[@]}"; do
     if ! command -v "$cmd" &>/dev/null; then
         echo "Error: $cmd is not installed or not in PATH" >&2
@@ -121,7 +121,9 @@ else
     FILTER_COMPLEX+="[vid]copy[out]"
 fi
 
-OUTPUT="meme-$(echo "$TOP_TEXT" "$BOTTOM_TEXT" "$VIDEO_FILE" | md5sum - | awk '{print $1}').$(file --brief --extension "$VIDEO_FILE")"
+NAME=$(echo "$TOP_TEXT" "$BOTTOM_TEXT" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//; s/-$//')
+OUTPUT="${NAME}-meme.$(file --brief --extension "$VIDEO_FILE")"
+
 gum log -l info --prefix Output "$OUTPUT"
 
 # Run ffmpeg
