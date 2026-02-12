@@ -20,6 +20,10 @@ VIDEO_FILE=""
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
+    --help)
+        echo 'USE: memify [--top=TEXT] [--bottom=TEXT] <path/to/image/or/video>'
+        exit 1
+        ;;
     --top=*)
         TOP_TEXT="${1#*=}"
         shift
