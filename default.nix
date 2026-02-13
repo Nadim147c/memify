@@ -1,38 +1,35 @@
 {
   lib,
-  makeWrapper,
-  runtimeShell,
-  stdenv,
+  writeShellApplication,
+  runCommand,
   coreutils,
   ffmpeg,
   file,
   gnused,
+  google-fonts,
   gum,
   imagemagick,
 }:
-stdenv.mkDerivation rec {
+let
+  font = google-fonts.override { fonts = [ "Anton" ]; };
+  fontfile = "${font}/share/fonts/truetype/Anton-Regular.ttf";
+  src = runCommand "memify-src" { } ''
+    sed '1,/^# --- Start ---/d' ${./memify.sh} > $out
+    sed -i 's#-font Anton-Regular#-font ${fontfile}#' $out
+  '';
+in
+writeShellApplication rec {
   name = "memify";
-  version = "0-unstable-2026-2-12";
-
-  src = ./memify.sh;
-  dontUnpack = true;
-
-  nativeBuildInputs = [ makeWrapper ];
-  buildInputs = [
-    gum
-    ffmpeg
-    imagemagick
+  inheritPath = false;
+  runtimeInputs = [
     coreutils
+    ffmpeg
     file
     gnused
+    gum
+    imagemagick
   ];
-
-  installPhase = ''
-    cat <(echo "#!${runtimeShell}") <(sed '1,/^# --- Start ---/d' $src) |
-        install -Dm755 /dev/stdin $out/bin/${name}
-    wrapProgram $out/bin/${name} --prefix PATH : '${lib.makeBinPath buildInputs}'
-  '';
-
+  text = builtins.readFile "${src}";
   meta = {
     description = "CLI meme generator";
     homepage = "https://github.com/Nadim147c/memify";
